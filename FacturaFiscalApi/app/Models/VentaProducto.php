@@ -13,6 +13,8 @@ class VentaProducto extends Model
 
     protected $fillable = ['k_ventas_productos', 'k_empresa', 'k_venta', 'k_articulo', 'ventas_productos_cantidad', 'ventas_productos_precio', 'ventas_productos_porIVA', 'ventas_productos_subtotal', 'ventas_productos_IVA', 'ventas_productos_total', 'ventas_productos_comentario', 'ventas_productos_unidad', 'ventas_productos_descuento', 'ventas_productos_cuenta_predial', 'ventas_productos_usar_coment'];
 
+    public $timestamps = false;
+
     /*k_ventas_productos bigint 
     k_empresa int 
     k_venta varchar(10) 

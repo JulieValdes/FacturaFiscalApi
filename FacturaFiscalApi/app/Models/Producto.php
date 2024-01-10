@@ -13,6 +13,8 @@ class Producto extends Model
 
     protected $fillable = ['k_articulo', 'k_empresa', 'articulo_clave', 'articulo_nombre', 'articulo_codigo', 'articulo_unidad', 'articulo_almacenable', 'articulo_precio', 'articulo_costo', 'articulo_poriva', 'articulo_retiva', 'articulo_retisr', 'borrado', 'articulo_codigo_sat', 'articulo_unidad_sat'];
 
+    public $timestamps = false;
+
         /* k_empresa int 
     k_articulo varchar(10) 
     articulo_clave varchar(45) 

@@ -12,4 +12,5 @@ class UsuarioEmpresa extends Model
     protected $table = 'usrs_empresas';
 
     protected $fillable = ['k_user', 'k_empresa'];
+    public $timestamps = false;
 }

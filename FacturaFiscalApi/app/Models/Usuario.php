@@ -12,5 +12,5 @@ class Usuario extends Model
     protected $table = 'usrs';
 
     protected $fillable = ['k_user int','email', 'nombre','pass', 'es_super_admin','puede_agregar_usrs','puede_cambiar_fecha'];
-    
+    public $timestamps = false;
 }
