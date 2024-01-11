@@ -6,6 +6,7 @@ use App\Models\Empresa;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\UsuarioEmpresa;
+use Illuminate\Support\Facades\DB;
 
 class EmpresaController extends Controller
 {
@@ -155,4 +156,25 @@ class EmpresaController extends Controller
         ], 500);
     }
         
+    public function UsuariosPorEmpresa($id)
+    {
+        $usuarios = DB::table('usrs_empresas')
+        ->join('usrs', 'usrs_empresas.k_user', '=', 'usrs.k_user')
+        ->where('usrs_empresas.k_empresa', '=', $id)
+        ->select('usrs.*')
+        ->get();
+
+        if ($usuarios) {
+            return response()->json([
+                'message' => 'Usuarios encontrados',
+                'data' => $usuarios,
+                'status' => '200'
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Usuarios no encontradas',
+                'status' => '404'
+            ], 404);
+        }
+    }
 }

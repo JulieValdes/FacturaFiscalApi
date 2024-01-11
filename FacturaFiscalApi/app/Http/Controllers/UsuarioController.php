@@ -118,11 +118,13 @@ class UsuarioController extends Controller
             if($usuario->delete()){
                 return response()->json([
                     'message' => 'Usuario eliminado',
+                    'data' => $usuario,
                     'status' => '200'
                 ], 200);
             }
             return response()->json([
                 'message' => 'Error al eliminar usuario',
+                'data'  => $usuario, 
                 'status' => '400'
             ], 400);
         }

@@ -13,6 +13,6 @@ class Usuario extends Model implements Authenticatable
 
     protected $table = 'usrs';
     protected $primaryKey = 'k_user';
-    protected $fillable = ['k_user int','email', 'nombre','pass', 'es_super_admin','puede_agregar_usrs','puede_cambiar_fecha'];
+    protected $fillable = ['k_user','email', 'nombre','pass', 'es_super_admin','puede_agregar_usrs','puede_cambiar_fecha'];
     public $timestamps = false;
 }

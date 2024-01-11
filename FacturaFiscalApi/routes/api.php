@@ -33,6 +33,8 @@ Route::prefix('v1.0')->group(function () {
 
     Route::delete('empresas/{id}', [EmpresaController::class, 'delete']);
 
+    Route::get('empresas/{id}/usuarios', [EmpresaController::class, 'UsuariosPorEmpresa']);
+
     /*------------------Rutas de Usuario --------------------- */
     Route::get('usuarios', [UsuarioController::class, 'index']);
 
