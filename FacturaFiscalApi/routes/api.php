@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UsuarioController; 
+use App\Http\Controllers\UsuariosEmpresasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,4 +46,12 @@ Route::prefix('v1.0')->group(function () {
     Route::put('usuarios/{id}', [UsuarioController::class, 'update']);
 
     Route::delete('usuarios/{id}', [UsuarioController::class, 'delete']);
+
+    /*------------------Rutas Usuario-Empresa---------------------------- */
+
+    Route::get('usuarios-empresas', [UsuariosEmpresasController::class, 'index']);
+
+    Route::post('usuarios-empresas', [UsuariosEmpresasController::class, 'create']);
+
+    Route::delete('usuarios-empresas', [UsuariosEmpresasController::class, 'delete']);
 });

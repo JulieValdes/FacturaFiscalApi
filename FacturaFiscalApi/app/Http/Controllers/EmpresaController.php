@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Models\UsuarioEmpresa;
 use Illuminate\Support\Facades\DB;
 
 class EmpresaController extends Controller
