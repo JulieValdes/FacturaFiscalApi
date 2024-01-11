@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\UsuarioController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,27 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'v1','namespace' => 'App\Http\Controllers'],function () {
-        Route::get('empresas', [EmpresaController::class, 'index']);
-        
+Route::prefix('v1.0')->group(function () {
+
+    /*------------------Rutas de Empresa --------------------- */
+    Route::get('empresas', [EmpresaController::class, 'index']);
+
+    Route::get('empresas/{id}', [EmpresaController::class, 'show']);    
+
+    Route::post('empresas', [EmpresaController::class, 'create']);
+
+    Route::put('empresas/{id}', [EmpresaController::class, 'update']);
+
+    Route::delete('empresas/{id}', [EmpresaController::class, 'delete']);
+
+    /*------------------Rutas de Usuario --------------------- */
+    Route::get('usuarios', [UsuarioController::class, 'index']);
+
+    Route::get('usuarios/{id}', [UsuarioController::class, 'show']);
+
+    Route::post('usuarios', [UsuarioController::class, 'create']);
+
+    Route::put('usuarios/{id}', [UsuarioController::class, 'update']);
+
+    Route::delete('usuarios/{id}', [UsuarioController::class, 'delete']);
 });
