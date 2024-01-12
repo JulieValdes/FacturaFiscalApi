@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UsuarioEmpresa;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 class UsuariosEmpresasController extends Controller
 {
@@ -48,12 +50,12 @@ class UsuariosEmpresasController extends Controller
         
     }
 
-    public function delete(Request $request){ 
-        //Se puede recibir por el path o en un json es mejor opción?
-        //DB::table('usrs_empresas')-$requesthere('k_user', $k_user)->where('k_empresa', $k_empresa)->delete();
+    //No se puede hacer un delete adecuado sin una llave primaria en la tabla de relación
+    //laravel presupone que hay una llave primaria y trabaja sus consultas en base a eso
+    /*public function delete(Int $id, Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'k_user' => 'required',
-            'k_empresa' => 'required',
+            'k_user' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -64,19 +66,24 @@ class UsuariosEmpresasController extends Controller
             ], 400);
         }
 
-        $usuarioEmpresa = UsuarioEmpresa::where('k_user', $request->k_user)->where('k_empresa', $request->k_empresa)->first();
-        if(!$usuarioEmpresa){
+        // Utilizamos Eloquent para buscar la relación específica por ID y k_user
+        $usuarioEmpresa = UsuarioEmpresa::where('k_empresa', $id)
+        ->where('k_user', $request->k_user)
+        ->first();
+
+        if ($usuarioEmpresa) {
+            $usuarioEmpresa->delete();
             return response()->json([
-                'message' => 'No se encontró la relación',
-                'status' => '400'
-            ], 400);
+                'message' => 'Usuario empresa eliminado',
+                'data' => $usuarioEmpresa,
+                'status' => '200'
+            ], 200);
         }
 
-        $usuarioEmpresa->delete();
-
         return response()->json([
-            'message' => 'Relación eliminada correctamente',
-            'status' => '200'
-        ], 200);
-    }   
+            'message' => 'Usuario empresa no encontrado o no eliminado',
+            'status' => '404'
+        ], 404);
+    }*/
+
 }
