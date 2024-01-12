@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UsuarioController; 
 use App\Http\Controllers\UsuariosEmpresasController;
+use App\Http\Controllers\SujetoController;
+use App\Http\Controllers\VentaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,5 +55,25 @@ Route::prefix('v1.0')->group(function () {
 
     Route::post('usuarios-empresas', [UsuariosEmpresasController::class, 'create']);
 
-    Route::delete('usuarios-empresas', [UsuariosEmpresasController::class, 'delete']);
+    //Route::delete('usuarios-empresas/{id}', [UsuariosEmpresasController::class, 'delete']);
+
+    /*------------------Rutas de Sujeto --------------------- */
+
+    Route::get('sujetos', [SujetoController::class, 'index']);
+
+    Route::post('sujetos', [SujetoController::class, 'create']);
+
+    Route::get('sujetos/{id}', [SujetoController::class, 'show']);
+
+    Route::put('sujetos/{id}', [SujetoController::class, 'update']);
+
+    Route::delete('sujetos/{id}', [SujetoController::class, 'delete']);
+
+    /*------------------Rutas de Venta--------------------------- */
+
+    Route::get('ventas', [VentaController::class, 'index']);
+
+    Route::post('ventas', [VentaController::class, 'create']);
+
+    Route::get('ventas/{id}', [VentaController::class, 'show']);
 });
