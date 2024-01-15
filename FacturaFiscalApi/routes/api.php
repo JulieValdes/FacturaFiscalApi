@@ -7,6 +7,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\UsuariosEmpresasController;
 use App\Http\Controllers\SujetoController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\ProductoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,4 +77,20 @@ Route::prefix('v1.0')->group(function () {
     Route::post('ventas', [VentaController::class, 'create']);
 
     Route::get('ventas/{id}', [VentaController::class, 'show']);
+
+    Route::delete('ventas/{id}', [VentaController::class, 'delete']);
+
+    Route::put('ventas/{id}', [VentaController::class, 'update']);
+
+    /*------------------Rutas de Articulos--------------------------- */
+    
+    Route::get('articulos', [ProductoController::class, 'index']);
+
+    Route::post('articulos', [ProductoController::class, 'create']);
+
+    Route::get('articulos/{id}', [ProductoController::class, 'show']);
+
+    Route::put('articulos/{id}', [ProductoController::class, 'update']);
+
+    Route::delete('articulos/{id}', [ProductoController::class, 'delete']);
 });
