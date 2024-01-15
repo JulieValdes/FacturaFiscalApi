@@ -95,6 +95,10 @@ class VentaController extends Controller
         ], 404);
     }
 
+
+    //No encuentra la venta aunque se especifiquen los datos
+    // En workbench está indicando que no se encuentra un procedure llamado SET_NC y por eso no se puede hacer la actualización
+    //De igual manera hay un problema ya que al parecer se implementó un modo seguro de actualización y eso también esta impidiendo que se actualice de manera normal
     public function update(int $id, Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -130,10 +134,10 @@ class VentaController extends Controller
                 ->first();
 
             if ($venta) {
-                // Hacer el commit después de verificar que la venta existe
                 $venta->fill($request->all());
 
                 if ($venta->save()) {
+                    // Hacer el commit después de la operación de actualización
                     DB::commit();
 
                     return response()->json([
@@ -142,25 +146,28 @@ class VentaController extends Controller
                         'status' => '200'
                     ], 200);
                 }
-
-                return response()->json([
-                    'message' => 'Error al actualizar venta',
-                    'data' => $venta,
-                    'status' => '400'
-                ], 400);
             }
-        } catch (\Exception $e) {
+
+            // Hacer el rollback si la venta no existe o no se actualiza correctamente
             DB::rollback();
 
             return response()->json([
-                'message' => 'Venta no encontrada',
+                'message' => 'Venta no encontrada o error al actualizar',
                 'status' => '404'
             ], 404);
+        } catch (\Exception $e) {
+            // Manejar errores inesperados y hacer el rollback
+            DB::rollback();
+
+            return response()->json([
+                'message' => 'Error inesperado al actualizar venta',
+                'status' => '500'
+            ], 500);
         }
     }
 
     //se estan borrando todos los registros con el mismo k_venta
-    public function delete($id, Request $request){
+    /*public function delete($id, Request $request){
 
         $validator = Validator::make($request->all(), [
             'k_empresa' => 'required',
@@ -194,5 +201,5 @@ class VentaController extends Controller
             'message' => 'Venta no encontrada',
             'status' => '404'
         ], 404);
-    }
+    }*/
 }
