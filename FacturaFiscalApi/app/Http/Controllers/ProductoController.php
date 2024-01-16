@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Producto;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+
 
 class ProductoController extends Controller
 {
@@ -20,6 +23,7 @@ class ProductoController extends Controller
 
     public function create(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'k_empresa' => 'required',
             'articulo_nombre' => 'required',
@@ -66,7 +70,7 @@ class ProductoController extends Controller
             ], 400);
         }
 
-        $producto = Producto::where('k_articulo', $id)->where('k_empresa', $request->k_empresa)->first();
+        $producto = Producto::where('k_empresa', $request->k_empresa)->where('k_articulo', $id)->first();
         if ($producto) {
             return response()->json([
                 'message' => 'Producto encontrado',
@@ -80,9 +84,10 @@ class ProductoController extends Controller
         ], 404);
     }
 
-    /*
+    
     // Se actualizan todos los productos con el id, da igual la empresa aunque en el where este el k_empresa
-    public function update($id, Request $request)
+    //Ya actualiza correctamente 160124
+    public function update(int $id, Request $request)
     {
         $validator = Validator::make($request->all(), [
             'k_empresa' => 'required',
@@ -102,29 +107,31 @@ class ProductoController extends Controller
             ], 400);
         }
 
-        $producto = Producto::where('k_articulo', $id)->where('k_empresa', $request->k_empresa)->first();
-        if ($producto) {
-            $producto->fill($request->all());
-            if ($producto->save()) {
-                return response()->json([
-                    'message' => 'Producto actualizado correctamente',
-                    'data' => $producto,
-                    'status' => '200'
-                ], 200);
-            }
-            return response()->json([
-                'message' => 'Error al actualizar producto',
-                'status' => '400'
-            ], 400);
-        }
-        return response()->json([
-            'message' => 'Producto no encontrado',
-            'status' => '404'
-        ], 404);
-    }*/
+        $result = Producto::where('k_articulo', $id)
+                 ->where('k_empresa', $request->k_empresa)
+                 ->update($request->all());
 
-    /*
+        if ($result) {
+            $producto = Producto::where('k_articulo', $id)
+                            ->where('k_empresa', $request->k_empresa)
+                            ->first();
+
+            return response()->json([
+                'message' => 'Producto actualizado correctamente',
+                'data' => $producto,
+                'status' => '200'
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Error al actualizar producto',
+            'status' => '400'
+        ], 400);
+    }
+
+    
     // Se eliminan todos los productos con el id, da igual la empresa aunque en el where este el k_empresa
+    // Ya elimina correctamente 160124
     public function delete($id, Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -138,24 +145,25 @@ class ProductoController extends Controller
                 'status' => '400'
             ], 400);
         }
+        $producto = Producto::where('k_articulo', $id)
+                 ->where('k_empresa', $request->k_empresa)
+                 ->first();
 
-        $producto = Producto::where('k_articulo', $id)->where('k_empresa', $request->k_empresa)->first();
-        if ($producto) {
-            if ($producto->delete()) {
-                return response()->json([
-                    'message' => 'Producto eliminado correctamente',
-                    'data' => $producto,
-                    'status' => '200'
-                ], 200);
-            }
+        $result = Producto::where('k_articulo', $id)
+                 ->where('k_empresa', $request->k_empresa)
+                 ->delete();
+
+        if ($result) {
             return response()->json([
-                'message' => 'Error al eliminar producto',
-                'status' => '400'
-            ], 400);
+                'message' => 'Producto eliminado correctamente',
+                'data' => $producto,
+                'status' => '200'
+            ], 200);
         }
+
         return response()->json([
-            'message' => 'Producto no encontrado',
-            'status' => '404'
-        ], 404);
-    }*/
+            'message' => 'Error al eliminar producto',
+            'status' => '400'
+        ], 400);
+    }
 }

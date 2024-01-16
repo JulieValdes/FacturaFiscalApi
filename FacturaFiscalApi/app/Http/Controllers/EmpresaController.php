@@ -11,7 +11,7 @@ class EmpresaController extends Controller
 {
     public function index()
     {
-        $empresas = Empresa::where('mis_datos_nombre', 'LIKE', 's%')->orderBy('mis_datos_nombre', 'DESC')->limit(50)->get();
+        $empresas = Empresa::orderBy('k_empresa', 'DESC')->limit(50)->get();
 
 
         return response()->json([
@@ -55,9 +55,6 @@ class EmpresaController extends Controller
         $empresa->k_empresa = $ultimoKEmpresa + 1;
         $empresa->fill($request->all());
         if($empresa->save()){
-
-            $empresa = Empresa::find($id);
-
             return response()->json([
                 'message' => 'Empresa creada correctamente',
                 'data' =>  $empresa,
@@ -123,14 +120,21 @@ class EmpresaController extends Controller
         if($empresa){
             $empresa->fill($request->all());
             $empresa->save();
+            if($empresa->save()){
             return response()->json([
                 'message' => 'Empresa actualizada correctamente',
                 'data' => $empresa,
                 'status' => '200'
             ], 200);
+            }
+            return response()->json([
+                'message' => 'Empresa no actualizada',
+                'data' => $empresa,
+                'status' => '500'
+            ], 500);
         }
         return response()->json([
-            'message' => 'Empresa no actualizada',
+            'message' => 'Empresa no encontrada',
             'data' => $empresa,
             'status' => '500'
         ], 500);

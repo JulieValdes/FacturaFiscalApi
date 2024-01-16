@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class UsuariosEmpresasController extends Controller
 {
     public function index(){
-        $usuariosEmpresas = UsuarioEmpresa::orderBy('k_empresa', 'ASC')->limit(50)->get();
+        $usuariosEmpresas = UsuarioEmpresa::orderBy('k_empresa', 'DESC')->limit(50)->get();
         return response()->json([
             'message' => 'Lista de usuarios empresas',
             'data' => $usuariosEmpresas,

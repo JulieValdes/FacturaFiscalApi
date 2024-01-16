@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Venta;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use LDAP\Result;
 
 class VentaController extends Controller
 {
     public function index(){
-        $ventas = Venta::orderBy('k_venta', 'ASC')->limit(50)->get();
+        $ventas = Venta::orderBy('k_venta', 'desc')->limit(50)->get();
         return response()->json([
             'message' => 'Lista de ventas',
             'data' => $ventas,
@@ -43,13 +44,11 @@ class VentaController extends Controller
             ], 400);
         }
 
-        $ultimaVenta = Venta::where('k_empresa', $request->k_empresa)->orderBy('k_venta', 'DESC')->first();
+        $ultimaVenta = Venta::where('k_empresa', $request->k_empresa)->max('k_venta')->first();
         $venta = new Venta();
         if ($ultimaVenta) {
             $venta->k_venta = $ultimaVenta->k_venta + 1;
-        } else {
-            $venta->k_venta = 1;
-        }
+        } 
         $venta->fill($request->all());
         if ($venta->save()) {
             return response()->json([
@@ -66,7 +65,7 @@ class VentaController extends Controller
 
     }
 
-    //problemas con empresas  que tiene registros repetidos
+    //problemas con empresas que tiene registros repetidos
     public function show($id, Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -124,50 +123,31 @@ class VentaController extends Controller
             ], 400);
         }
 
-        try {
-            DB::beginTransaction();
-
-            // Mover el inicio de la transacción al inicio de la función
+        
+        $result = Venta::where('k_venta', $id)
+               ->where('k_empresa', $request->k_empresa)
+               ->where('k_sujeto', $request->k_sujeto)
+               ->update($request->all());
+        
+        if($result){
             $venta = Venta::where('k_venta', $id)
-                ->where('k_empresa', $request->k_empresa)
-                ->where('k_sujeto', $request->k_sujeto)
-                ->first();
-
-            if ($venta) {
-                $venta->fill($request->all());
-
-                if ($venta->save()) {
-                    // Hacer el commit después de la operación de actualización
-                    DB::commit();
-
-                    return response()->json([
-                        'message' => 'Venta actualizada correctamente',
-                        'data' => $venta,
-                        'status' => '200'
-                    ], 200);
-                }
-            }
-
-            // Hacer el rollback si la venta no existe o no se actualiza correctamente
-            DB::rollback();
-
+            ->where('k_empresa', $request->k_empresa)
+            ->where('k_sujeto', $request->k_sujeto)
+            ->first();
             return response()->json([
-                'message' => 'Venta no encontrada o error al actualizar',
-                'status' => '404'
-            ], 404);
-        } catch (\Exception $e) {
-            // Manejar errores inesperados y hacer el rollback
-            DB::rollback();
-
-            return response()->json([
-                'message' => 'Error inesperado al actualizar venta',
-                'status' => '500'
-            ], 500);
+                'message' => 'Venta actualizada correctamente',
+                'data' => $venta,
+                'status' => '200'
+            ], 200);
         }
+        return response()->json([
+            'message' => 'Error al actualizar venta',
+            'status' => '400'
+        ], 400);
     }
 
     //se estan borrando todos los registros con el mismo k_venta
-    /*public function delete($id, Request $request){
+    public function delete($id, Request $request){
 
         $validator = Validator::make($request->all(), [
             'k_empresa' => 'required',
@@ -183,23 +163,20 @@ class VentaController extends Controller
         }
 
         $venta = Venta::where('k_venta', $id)->where('k_empresa', $request->k_empresa)->where('k_sujeto', $request->k_sujeto)->first();
-        if ($venta) {
-            if ($venta->delete()) {
-                return response()->json([
-                    'message' => 'Venta eliminada correctamente',
-                    'data' => $venta,
-                    'status' => '200'
-                ], 200);
-            }
+
+        $result = Venta::where('k_venta', $id)->where('k_empresa', $request->k_empresa)->where('k_sujeto', $request->k_sujeto)->delete();
+
+        if ($result) {
             return response()->json([
-                'message' => 'Error al eliminar venta',
+                'message' => 'Producto eliminado correctamente',
                 'data' => $venta,
-                'status' => '400'
-            ], 400);
+                'status' => '200'
+            ], 200);
         }
+
         return response()->json([
-            'message' => 'Venta no encontrada',
-            'status' => '404'
-        ], 404);
-    }*/
+            'message' => 'Error al eliminar producto',
+            'status' => '400'
+        ], 400);
+    }
 }

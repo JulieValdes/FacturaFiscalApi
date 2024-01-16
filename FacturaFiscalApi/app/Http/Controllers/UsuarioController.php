@@ -12,7 +12,7 @@ class UsuarioController extends Controller
     
     public function index()
     {
-        $usuarios = Usuario::orderBy('k_user', 'ASC')->limit(50)->get();
+        $usuarios = Usuario::orderBy('k_user', 'DESC')->limit(50)->get();
         return response()->json([
             'message' => 'Lista de empresas',
             'data' => $usuarios,
