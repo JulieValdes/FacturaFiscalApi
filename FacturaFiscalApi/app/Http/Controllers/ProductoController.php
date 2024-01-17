@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Producto;
+use GuzzleHttp\Handler\Proxy;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
@@ -42,15 +43,25 @@ class ProductoController extends Controller
             ], 400);
         }
 
+        
         $producto = new Producto();
         $producto->fill($request->all());
         if ($producto->save()) {
+            // Realizar una consulta para obtener el valor actualizado de k_articulo
+            $k_articulo_actualizado = Producto::where('id', $producto->id)
+                ->where('k_empresa', $request->k_empresa)
+                ->value('k_articulo');
+    
+            // Agregar el valor actualizado a la respuesta
+            $producto->k_articulo = $k_articulo_actualizado;
+    
             return response()->json([
                 'message' => 'Producto creado correctamente',
                 'data' => $producto,
                 'status' => '200'
             ], 200);
         }
+    
         return response()->json([
             'message' => 'Error al crear producto',
             'status' => '400'
