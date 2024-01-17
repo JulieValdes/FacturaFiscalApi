@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Venta;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use LDAP\Result;
 
 class VentaController extends Controller
 {
@@ -43,17 +42,31 @@ class VentaController extends Controller
                 'status' => '400'
             ], 400);
         }
+        
+        
 
-        $ultimaVenta = Venta::where('k_empresa', $request->k_empresa)->max('k_venta')->first();
+        $ultimaVenta = Venta::where('k_empresa', $request->k_empresa)->max('k_venta');
         $venta = new Venta();
-        if ($ultimaVenta) {
-            $venta->k_venta = $ultimaVenta->k_venta + 1;
-        } 
+        if ($ultimaVenta !== null) {
+            $venta->k_venta = $ultimaVenta + 1;
+        }
         $venta->fill($request->all());
         if ($venta->save()) {
+            
+            $consulta = DB::table('ventas')
+            ->select('k_venta')
+            ->where('k_empresa', $request->k_empresa)
+            ->where('k_sujeto', $request->k_sujeto)
+            ->orderBy('venta_fecha', 'desc')
+            ->orderBy('k_venta', 'desc')
+            ->limit(1);
+    
+            $ultimaId = $consulta->value('k_venta');
+
             return response()->json([
                 'message' => 'Venta creada correctamente',
                 'data' => $venta,
+                'k_venta' => $ultimaId,
                 'status' => '200'
             ], 200);
         }
