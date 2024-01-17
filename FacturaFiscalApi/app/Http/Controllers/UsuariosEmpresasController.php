@@ -37,6 +37,7 @@ class UsuariosEmpresasController extends Controller
         $usuarioEmpresa = new UsuarioEmpresa();
         $usuarioEmpresa->fill($request->all());
         if($usuarioEmpresa->save()){
+            $usuarioEmpresa = UsuarioEmpresa::where('k_empresa', $request->k_empresa) ->where('k_user', $request->k_user)->first();
             return response()->json([
                 'message' => 'Usuario empresa creado',
                 'data' => $usuarioEmpresa,
@@ -52,7 +53,7 @@ class UsuariosEmpresasController extends Controller
 
     //No se puede hacer un delete adecuado sin una llave primaria en la tabla de relación
     //laravel presupone que hay una llave primaria y trabaja sus consultas en base a eso
-    /*public function delete(Int $id, Request $request)
+    public function delete(Int $id, Request $request)
     {
         $validator = Validator::make($request->all(), [
             'k_user' => 'required|integer',
@@ -64,15 +65,15 @@ class UsuariosEmpresasController extends Controller
                 'errors' => $validator->errors(),
                 'status' => '400'
             ], 400);
-        }
+        } 
+        $usuarioEmpresa = UsuarioEmpresa::where('k_empresa', $id) ->where('k_user', $request->k_user)->first();
 
-        // Utilizamos Eloquent para buscar la relación específica por ID y k_user
-        $usuarioEmpresa = UsuarioEmpresa::where('k_empresa', $id)
-        ->where('k_user', $request->k_user)
-        ->first();
+        $result = UsuarioEmpresa::where('k_empresa', $id) ->where('k_user', $request->k_user)->delete();
 
-        if ($usuarioEmpresa) {
-            $usuarioEmpresa->delete();
+        if ($result) {
+
+           
+            
             return response()->json([
                 'message' => 'Usuario empresa eliminado',
                 'data' => $usuarioEmpresa,
@@ -84,6 +85,6 @@ class UsuariosEmpresasController extends Controller
             'message' => 'Usuario empresa no encontrado o no eliminado',
             'status' => '404'
         ], 404);
-    }*/
+    }
 
 }

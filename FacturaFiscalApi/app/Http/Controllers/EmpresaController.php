@@ -55,6 +55,7 @@ class EmpresaController extends Controller
         $empresa->k_empresa = $ultimoKEmpresa + 1;
         $empresa->fill($request->all());
         if($empresa->save()){
+            $empresa = Empresa::find($id);
             return response()->json([
                 'message' => 'Empresa creada correctamente',
                 'data' =>  $empresa,

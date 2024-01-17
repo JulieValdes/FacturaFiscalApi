@@ -48,7 +48,7 @@ class ProductoController extends Controller
         $producto->fill($request->all());
         if ($producto->save()) {
             // Realizar una consulta para obtener el valor actualizado de k_articulo
-            $k_articulo_actualizado = Producto::where('id', $producto->id)
+            $k_articulo_actualizado = Producto::where('k_articulo', $producto->id)
                 ->where('k_empresa', $request->k_empresa)
                 ->value('k_articulo');
     

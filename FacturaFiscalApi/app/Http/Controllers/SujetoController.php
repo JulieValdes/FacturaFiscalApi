@@ -33,13 +33,24 @@ class SujetoController extends Controller
                 'status' => '400'
             ], 400);
         }
-
+        
+        $ultimoSujeto = Sujeto::where('k_empresa', $request->k_empresa)->max('k_sujetos');
+        $ultimoSujeto = $ultimoSujeto + 1;
         $sujeto = new Sujeto();
         $sujeto->fill($request->all());
         if($sujeto->save()){
+
+            $consulta = DB::table('sujetos')
+            ->select('k_sujetos')
+            ->where('k_empresa', $request->k_empresa)
+            ->orderBy('k_sujetos', 'desc')
+            ->limit(1);
+
             return response()->json([
                 'message' => 'Sujeto creado correctamente',
                 'data' => $sujeto,
+                'k_empresa'=> $request->k_empresa,
+                'k_sujeto' => $consulta->value('k_sujetos'),
                 'status' => '200'
             ], 200);
         }
