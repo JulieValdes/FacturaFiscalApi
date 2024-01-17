@@ -40,11 +40,13 @@ class SujetoController extends Controller
         $sujeto->fill($request->all());
         if($sujeto->save()){
 
-            $consulta = DB::table('sujetos')
+            /*$consulta = DB::table('sujetos')
             ->select('k_sujetos')
             ->where('k_empresa', $request->k_empresa)
             ->orderBy('k_sujetos', 'desc')
-            ->limit(1);
+            ->limit(1);*/
+
+            $k_sujeto = Sujeto::where('k_empresa', $request->k_empresa)->max('k_sujetos');
 
             return response()->json([
                 'message' => 'Sujeto creado correctamente',
