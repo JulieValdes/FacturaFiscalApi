@@ -72,7 +72,6 @@ class UsuariosEmpresasController extends Controller
 
         if ($result) {
 
-           
             
             return response()->json([
                 'message' => 'Usuario empresa eliminado',

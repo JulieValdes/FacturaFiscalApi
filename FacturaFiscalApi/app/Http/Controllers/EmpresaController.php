@@ -39,6 +39,8 @@ class EmpresaController extends Controller
             'mis_datos_cp' => 'required',
             'mis_datos_regimen' => 'required',
             'mis_datos_email' => 'required',
+            'mis_datos_formapago' => 'required',
+            'mis_datos_formato_pago' => 'required'
         ]);
         
         if ($validator->fails()) {

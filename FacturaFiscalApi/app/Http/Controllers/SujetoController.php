@@ -33,26 +33,15 @@ class SujetoController extends Controller
                 'status' => '400'
             ], 400);
         }
-        
-        $ultimoSujeto = Sujeto::where('k_empresa', $request->k_empresa)->max('k_sujetos');
-        $ultimoSujeto = $ultimoSujeto + 1;
+
         $sujeto = new Sujeto();
         $sujeto->fill($request->all());
         if($sujeto->save()){
-
-            /*$consulta = DB::table('sujetos')
-            ->select('k_sujetos')
-            ->where('k_empresa', $request->k_empresa)
-            ->orderBy('k_sujetos', 'desc')
-            ->limit(1);*/
-
-            $k_sujeto = Sujeto::where('k_empresa', $request->k_empresa)->max('k_sujetos');
+            $consulta = DB::table('sujetos')->where('k_empresa', $request->k_empresa)->orderByRaw('CAST(k_sujetos AS UNSIGNED) DESC')->limit(1)->first();
 
             return response()->json([
                 'message' => 'Sujeto creado correctamente',
-                'data' => $sujeto,
-                'k_empresa'=> $request->k_empresa,
-                'k_sujeto' => $consulta->value('k_sujetos'),
+                'data' => $consulta,
                 'status' => '200'
             ], 200);
         }
@@ -99,7 +88,6 @@ class SujetoController extends Controller
             'sujetos_nombre' => 'required',
             'sujetos_alias' => 'required',
             'sujetos_regimen' => 'required',
-            'sujetos_telefono' => 'required'
         ]);
 
         if($validator->fails()){
@@ -110,10 +98,12 @@ class SujetoController extends Controller
             ], 400);
         }
 
-        $sujeto = Sujeto::where('k_sujetos', $id)->where('k_empresa', $request->k_empresa)->first();
+        $result = Sujeto::where('k_sujetos', $id)
+                ->where('k_empresa', $request->k_empresa)
+                ->update($request->all());
 
-        if ($sujeto) {
-            $sujeto->update($request->all());
+        if ($result) {
+            $sujeto = Sujeto::where('k_sujetos', $id)->where('k_empresa', $request->k_empresa)->first();
 
             return response()->json([
                 'message' => 'Sujeto actualizado correctamente',
@@ -129,6 +119,7 @@ class SujetoController extends Controller
     }
 
     public function delete(Int $id, Request $request){
+        
         $validator = Validator::make($request->all(), [
             'k_empresa' => 'required'
         ]);
@@ -143,8 +134,9 @@ class SujetoController extends Controller
 
         $sujeto = Sujeto::where('k_sujetos', $id)->where('k_empresa', $request->k_empresa)->first();
 
-        if ($sujeto) {
-            $sujeto->delete();
+        $result = Sujeto::where('k_sujetos', $id)->where('k_empresa', $request->k_empresa)->delete();
+
+        if ($result) {
 
             return response()->json([
                 'message' => 'Sujeto eliminado correctamente',

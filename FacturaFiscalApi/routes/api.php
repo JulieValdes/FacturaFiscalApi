@@ -8,6 +8,7 @@ use App\Http\Controllers\UsuariosEmpresasController;
 use App\Http\Controllers\SujetoController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\VentaProductoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,7 +57,7 @@ Route::prefix('v1.0')->group(function () {
 
     Route::post('usuarios-empresas', [UsuariosEmpresasController::class, 'create']);
 
-    //Route::delete('usuarios-empresas/{id}', [UsuariosEmpresasController::class, 'delete']);
+    Route::delete('usuarios-empresas/{id}', [UsuariosEmpresasController::class, 'delete']);
 
     /*------------------Rutas de Sujeto --------------------- */
 
@@ -93,4 +94,15 @@ Route::prefix('v1.0')->group(function () {
     Route::put('articulos/{id}', [ProductoController::class, 'update']);
 
     Route::delete('articulos/{id}', [ProductoController::class, 'delete']);
+
+    /*------------------Rutas de Venta-Producto--------------------------- */
+    Route::get('ventas-productos', [VentaProductoController::class, 'index']);
+
+    Route::post('ventas-productos', [VentaProductoController::class, 'create']);
+
+    Route::get('ventas-productos/{id}', [VentaProductoController::class, 'show']);
+
+    Route::put('ventas-productos/{id}', [VentaProductoController::class, 'update']);
+
+    Route::delete('ventas-productos/{id}', [VentaProductoController::class, 'delete']);
 });

@@ -47,17 +47,11 @@ class ProductoController extends Controller
         $producto = new Producto();
         $producto->fill($request->all());
         if ($producto->save()) {
-            // Realizar una consulta para obtener el valor actualizado de k_articulo
-            $k_articulo_actualizado = Producto::where('k_articulo', $producto->id)
-                ->where('k_empresa', $request->k_empresa)
-                ->value('k_articulo');
-    
-            // Agregar el valor actualizado a la respuesta
-            $producto->k_articulo = $k_articulo_actualizado;
-    
+            $consulta = DB::table('articulos')->where('k_empresa', $request->k_empresa)->orderByRaw('CAST(k_articulo AS UNSIGNED) DESC')->limit(1)->first();
+
             return response()->json([
                 'message' => 'Producto creado correctamente',
-                'data' => $producto,
+                'data' => $consulta,
                 'status' => '200'
             ], 200);
         }
