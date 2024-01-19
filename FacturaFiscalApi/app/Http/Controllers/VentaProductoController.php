@@ -122,7 +122,6 @@ class VentaProductoController extends Controller
             'ventas_productos_comentario' => 'required',
             'ventas_productos_unidad' => 'required',
             'ventas_productos_descuento' => 'required',
-            'ventas_productos_cuenta_predial' => 'required',
             'ventas_productos_usar_coment' => 'required',
         ]);
 
